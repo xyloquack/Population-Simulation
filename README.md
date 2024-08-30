@@ -5,17 +5,17 @@ This is not necessarily the best code, but it runs decently quick for what I nee
 
 To change the way that the program's conditions work, you have several constants you can change at the top of the file, and I will walk through the naming scheme now:
 
-A_ID = 1
-A_ON_B_PERF = 0.5
-A_ON_A_PERF = 1.75
-A_ON_NONE_PERF = 2
-A_FOOD_REQ = 1
+A_ID = 1      
+A_ON_B_PERF = 0.5        
+A_ON_A_PERF = 1.75        
+A_ON_NONE_PERF = 2 
+A_FOOD_REQ = 1        
 
-B_ID = 2
-B_ON_A_PERF = 1.5
-B_ON_B_PERF = 0.75
-B_ON_NONE_PERF = 2
-B_FOOD_REQ = 1
+B_ID = 2        
+B_ON_A_PERF = 1.5        
+B_ON_B_PERF = 0.75        
+B_ON_NONE_PERF = 2        
+B_FOOD_REQ = 1         
 
 When you see "BLANK on BLANK PERF" in a name, it means that the first creature in the population is competing with the second creature, and this is the label of the performance. 
 So you can think of it as "FIRST on SECOND PERF". This property is given to the first creature so that it can store how much food it will gain from the interaction with the second creature, or how performant it will be.
