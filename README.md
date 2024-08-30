@@ -9,7 +9,7 @@ A_ID = 1
 A_ON_B_PERF = 0.5        
 A_ON_A_PERF = 1.75        
 A_ON_NONE_PERF = 2 
-A_FOOD_REQ = 1        
+A_FOOD_REQ = 1              
 
 B_ID = 2        
 B_ON_A_PERF = 1.5        
