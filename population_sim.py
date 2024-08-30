@@ -1,5 +1,13 @@
 import random
 import math
+import os
+
+absolute_path = os.path.abspath(__file__)
+directory_name = os.path.dirname(absolute_path)
+os.chdir(directory_name)
+
+EXPORT_DATA = True
+OUTPUT_FILE = "data.txt"
 
 A_ID = 1
 A_ON_B_PERF = 0.5
@@ -19,6 +27,8 @@ food_sources = []
 
 current_a_count = 0
 current_b_count = 0
+
+frequency_over_time = []
 
 class Creature():
     def __init__(self, creature_id, opposing_performance, self_performance, none_performance, food_requirement):
@@ -73,6 +83,12 @@ def main():
     global food_sources
     global current_a_count
     global current_b_count
+    global frequency_over_time
+
+    if EXPORT_DATA:
+        file = open(OUTPUT_FILE, "w")
+        file.write("")
+        file.close()
 
     total_number_of_creatures = int(input("How many creatures should we start with? "))
     pop_a_proportion = float(input("What proportion do you want to be Creature A (in a decimal ratio)? "))
@@ -98,6 +114,13 @@ def main():
     generation = 0
 
     print(f"Gen 0: A = {pop_a_start} B = {pop_b_start}")
+
+    if EXPORT_DATA:
+        file = open("data.txt", 'a')
+        frequency = pop_a_proportion
+        print(file)
+        file.write(f"{frequency}\n")
+        file.close()
 
     while generation < num_generations:
         current_a_count = 0
@@ -132,6 +155,14 @@ def main():
         for i in range(number_of_food_sources):
             new_source = FoodSource()
             food_sources.append(new_source)
+
+
+        if EXPORT_DATA:
+            file = open("data.txt", 'a')
+            frequency = current_a_count / (current_a_count + current_b_count)
+            print(file)
+            file.write(f"{frequency}\n")
+            file.close()
 
 if __name__ == "__main__":
     main()
