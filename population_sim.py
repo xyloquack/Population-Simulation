@@ -36,19 +36,19 @@ class Creature():
         if opp_id != self.id and opp_id != 0:
             children += int(self.opp_perf)
             if not self.opp_perf % self.food_req == 0:
-                if self.opp_perf - (self.food_req * children) >= random.random():
+                if self.opp_perf - (self.food_req * children) >= random.random() * self.food_req:
                     children += 1
 
         elif opp_id == self.id:
             children += int(self.self_perf)
             if not self.self_perf % self.food_req == 0:
-                if self.self_perf - (self.food_req * children) >= random.random():
+                if self.self_perf - (self.food_req * children) >= random.random() * self.food_req:
                     children += 1
 
         else:
             children += int(self.none_perf)
             if not self.none_perf % self.food_req == 0:
-                if self.none_perf - (self.food_req * children) >= random.random():
+                if self.none_perf - (self.food_req * children) >= random.random() * self.food_req:
                     children += 1
 
         children = int(children)
