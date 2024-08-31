@@ -31,6 +31,7 @@ current_b_count = 0
 frequency_over_time = []
 
 class Creature():
+    __slots__ = ['id', 'opp_perf', 'self_perf', 'none_perf', 'food_req']
     def __init__(self, creature_id, opposing_performance, self_performance, none_performance, food_requirement):
         self.id = creature_id
         self.opp_perf = opposing_performance
@@ -73,6 +74,7 @@ class Creature():
             current_b_count += children
 
 class FoodSource():
+    __slots__ = ['visitors', 'occupancy']
     def __init__(self):
         self.visitors = []
         self.occupancy = 0
@@ -118,23 +120,31 @@ def main():
     if EXPORT_DATA:
         file = open("data.txt", 'a')
         frequency = pop_a_proportion
-        print(file)
         file.write(f"{frequency}\n")
-        file.close()
 
     while generation < num_generations:
+        available_sources = list(food_sources)
         current_a_count = 0
         current_b_count = 0
         random.shuffle(current_generation)
         placed_creatures = 0
+
+        if len(current_generation) > len(food_sources) * 2:
+            for i in range(0, len(food_sources) * 2, 2):
+                source = food_sources[i // 2]
+                source.visitors.append(current_generation[i])
+                source.visitors.append(current_generation[i + 1])
+                source.occupancy = 2
+
         for i in range(len(current_generation)):
             if placed_creatures == (2 * number_of_food_sources):
                 break
-            selected_food_source = food_sources[random.randint(0, number_of_food_sources - 1)]
-            while selected_food_source.occupancy == 2:
-                selected_food_source = food_sources[random.randint(0, number_of_food_sources - 1)]
+            random_index = random.randint(0, len(available_sources) - 1)
+            selected_food_source = available_sources[random_index]
             selected_food_source.visitors.append(current_generation[i])
             selected_food_source.occupancy += 1
+            if selected_food_source.occupancy == 2:
+                available_sources.pop(random_index)
             placed_creatures += 1
         
         for food_source in food_sources:
@@ -146,23 +156,24 @@ def main():
                 food_source.visitors[0].reproduce(food_source.visitors[1].id)
                 food_source.visitors[1].reproduce(food_source.visitors[0].id)
 
-        current_generation = list(next_generation)
-        next_generation = list()
+        current_generation.clear()
+        current_generation.extend(next_generation)
+        next_generation.clear()
+
         generation += 1
         print(f"Gen {generation}: A = {current_a_count}, B = {current_b_count}")
 
-        food_sources = list()
         for i in range(number_of_food_sources):
-            new_source = FoodSource()
-            food_sources.append(new_source)
+            food_sources[i].occupancy = 0
+            food_sources[i].visitors = list()
 
 
         if EXPORT_DATA:
-            file = open("data.txt", 'a')
             frequency = current_a_count / (current_a_count + current_b_count)
-            print(file)
             file.write(f"{frequency}\n")
-            file.close()
+
+    if EXPORT_DATA:
+        file.close()
 
 if __name__ == "__main__":
     main()
