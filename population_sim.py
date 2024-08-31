@@ -21,6 +21,8 @@ B_ON_B_PERF = 0.75
 B_ON_NONE_PERF = 2
 B_FOOD_REQ = 1
 
+STOP_ON_EXTINCTION = True
+
 current_generation = []
 next_generation = []
 food_sources = []
@@ -117,12 +119,17 @@ def main():
 
     print(f"Gen 0: A = {pop_a_start} B = {pop_b_start}")
 
+    current_a_count = pop_a_start
+    current_b_count = pop_b_start
+
     if EXPORT_DATA:
         file = open("data.txt", 'a')
         frequency = pop_a_proportion
         file.write(f"{frequency}\n")
 
     while generation < num_generations:
+        if STOP_ON_EXTINCTION and (current_a_count == 0 or current_b_count == 0):
+            break
         available_sources = list(food_sources)
         current_a_count = 0
         current_b_count = 0
