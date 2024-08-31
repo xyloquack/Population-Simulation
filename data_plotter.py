@@ -13,7 +13,6 @@ def main():
     with open(DATA, "r") as file:
         for line in file.readlines():
             y.append(float(line))
-    print(y)
 
     x = range(0, len(y))
 

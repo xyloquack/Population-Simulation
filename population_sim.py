@@ -1,6 +1,7 @@
 import random
 import math
 import os
+import numpy as np
 
 absolute_path = os.path.abspath(__file__)
 directory_name = os.path.dirname(absolute_path)
@@ -41,35 +42,24 @@ class Creature():
         self.none_perf = none_performance
         self.food_req = food_requirement
 
-    def reproduce(self, opp_id):
+    def reproduce(self, matching):
         global next_generation
         global current_a_count
         global current_b_count
         children = 0
-        if opp_id != self.id and opp_id != 0:
-            children += int(self.opp_perf)
-            if not self.opp_perf % self.food_req == 0:
-                if self.opp_perf - (self.food_req * children) >= random.random() * self.food_req:
-                    children += 1
-
-        elif opp_id == self.id:
-            children += int(self.self_perf)
-            if not self.self_perf % self.food_req == 0:
-                if self.self_perf - (self.food_req * children) >= random.random() * self.food_req:
-                    children += 1
-
+        performance = 0
+        if matching == 1:
+            performance = self.self_perf
+        elif matching == 0:
+            performance = self.opp_perf
         else:
-            children += int(self.none_perf)
-            if not self.none_perf % self.food_req == 0:
-                if self.none_perf - (self.food_req * children) >= random.random() * self.food_req:
-                    children += 1
-
-        children = int(children)
-
-        for child in range(children):
-            new_child = Creature(self.id, self.opp_perf, self.self_perf, self.none_perf, self.food_req)
-            next_generation.append(new_child)
-
+            performance = self.none_perf
+            
+        children += int(performance)
+        if performance % self.food_req:
+            if performance - (self.food_req * children) >= random.random() * self.food_req:
+                children += 1
+            
         if self.id == 1:
             current_a_count += children
         else:
@@ -127,41 +117,36 @@ def main():
         frequency = pop_a_proportion
         file.write(f"{frequency}\n")
 
+    indices = [i for i in range(0, number_of_food_sources)] * 2
+
     while generation < num_generations:
         if STOP_ON_EXTINCTION and (current_a_count == 0 or current_b_count == 0):
             break
-        available_sources = list(food_sources)
         current_a_count = 0
         current_b_count = 0
-        random.shuffle(current_generation)
+        np.random.shuffle(current_generation)
         placed_creatures = 0
 
-        if len(current_generation) > len(food_sources) * 2:
-            for i in range(0, len(food_sources) * 2, 2):
-                source = food_sources[i // 2]
-                source.visitors.append(current_generation[i])
-                source.visitors.append(current_generation[i + 1])
-                source.occupancy = 2
+        np.random.shuffle(indices)
 
         for i in range(len(current_generation)):
-            if placed_creatures == (2 * number_of_food_sources):
+            if i >= number_of_food_sources * 2:
                 break
-            random_index = random.randint(0, len(available_sources) - 1)
-            selected_food_source = available_sources[random_index]
-            selected_food_source.visitors.append(current_generation[i])
-            selected_food_source.occupancy += 1
-            if selected_food_source.occupancy == 2:
-                available_sources.pop(random_index)
-            placed_creatures += 1
+            source = food_sources[indices[i]]
+            source.visitors.append(current_generation[i])
+            source.occupancy += 1
         
         for food_source in food_sources:
             if food_source.occupancy == 0:
                 continue
             elif food_source.occupancy == 1:
-                food_source.visitors[0].reproduce(0)
+                food_source.visitors[0].reproduce(2)
             else:
-                food_source.visitors[0].reproduce(food_source.visitors[1].id)
-                food_source.visitors[1].reproduce(food_source.visitors[0].id)
+                matching = food_source.visitors[1].id == food_source.visitors[0].id
+                food_source.visitors[0].reproduce(matching)
+                food_source.visitors[1].reproduce(matching)
+
+        next_generation = [Creature(A_ID, A_ON_B_PERF, A_ON_A_PERF, A_ON_NONE_PERF, A_FOOD_REQ)] * current_a_count + [Creature(B_ID, B_ON_A_PERF, B_ON_B_PERF, B_ON_NONE_PERF, B_FOOD_REQ)] * current_b_count
 
         current_generation.clear()
         current_generation.extend(next_generation)
@@ -170,14 +155,14 @@ def main():
         generation += 1
         print(f"Gen {generation}: A = {current_a_count}, B = {current_b_count}")
 
-        for i in range(number_of_food_sources):
-            food_sources[i].occupancy = 0
-            food_sources[i].visitors = list()
-
+        for source in food_sources:
+            source.occupancy = 0
+            source.visitors = list()
 
         if EXPORT_DATA:
             frequency = current_a_count / (current_a_count + current_b_count)
             file.write(f"{frequency}\n")
+
 
     if EXPORT_DATA:
         file.close()
