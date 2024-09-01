@@ -27,9 +27,6 @@ STOP_ON_EXTINCTION = True
 MUTATIONS = True
 MUTATION_CHANCE = 0.01
 
-current_a_count = 0
-current_b_count = 0
-
 class Creature():
     __slots__ = ['id', 'opp_perf', 'self_perf', 'none_perf', 'food_req']
     def __init__(self, creature_id, opposing_performance, self_performance, none_performance, food_requirement):
@@ -39,9 +36,7 @@ class Creature():
         self.none_perf = none_performance
         self.food_req = food_requirement
 
-    def reproduce(self, matching):
-        global current_b_count
-        global current_a_count
+    def reproduce(self, matching, current_a_count, current_b_count):
 
         children = 0
         performance = 0
@@ -78,6 +73,8 @@ class Creature():
                     else:
                         current_b_count += 1
 
+        return current_a_count, current_b_count
+
 
         # with open(OUTPUT_FILE, 'a') as file:
         #     print(current_a_count, current_b_count, file=file)
@@ -89,8 +86,6 @@ class FoodSource():
         self.occupancy = 0
 
 def main():
-    global current_a_count
-    global current_b_count
     
     current_generation = []
     next_generation = []
@@ -150,11 +145,11 @@ def main():
             if food_source.occupancy == 0:
                 continue
             elif food_source.occupancy == 1:
-                food_source.visitors[0].reproduce(2)
+                current_a_count, current_b_count = food_source.visitors[0].reproduce(2, current_a_count, current_b_count)
             else:
                 matching = food_source.visitors[1].id == food_source.visitors[0].id
-                food_source.visitors[0].reproduce(matching)
-                food_source.visitors[1].reproduce(matching)
+                current_a_count, current_b_count = food_source.visitors[0].reproduce(matching, current_a_count, current_b_count)
+                current_a_count, current_b_count = food_source.visitors[1].reproduce(matching, current_a_count, current_b_count)
 
         next_generation = [creature_a] * current_a_count + [creature_b] * current_b_count
 
