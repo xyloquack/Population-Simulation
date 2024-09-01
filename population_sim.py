@@ -27,7 +27,7 @@ B_FOOD_REQ = 1
 
 STOP_ON_EXTINCTION = True
 
-MUTATIONS = True
+MUTATIONS = False
 MUTATION_CHANCE = 0.01
 
 current_a_count = 0
