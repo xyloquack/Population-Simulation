@@ -134,9 +134,7 @@ def main():
         np.random.shuffle(current_generation)
         np.random.shuffle(indices)
 
-        for i in range(len(current_generation)):
-            if i >= number_of_food_sources * 2:
-                break
+        for i in range(min(len(current_generation), len(indices))):
             source = food_sources[indices[i]]
             source.visitors.append(current_generation[i])
             source.occupancy += 1
@@ -150,6 +148,8 @@ def main():
                 matching = food_source.visitors[1].id == food_source.visitors[0].id
                 current_a_count, current_b_count = food_source.visitors[0].reproduce(matching, current_a_count, current_b_count)
                 current_a_count, current_b_count = food_source.visitors[1].reproduce(matching, current_a_count, current_b_count)
+            food_source.occupancy = 0
+            food_source.visitors = list()
 
         next_generation = [creature_a] * current_a_count + [creature_b] * current_b_count
 
@@ -159,10 +159,6 @@ def main():
 
         generation += 1
         print(f"Gen {generation}: A = {current_a_count}, B = {current_b_count}")
-
-        for source in food_sources:
-            source.occupancy = 0
-            source.visitors = list()
 
         if EXPORT_DATA:
             frequency = current_a_count / (current_a_count + current_b_count)
