@@ -3,9 +3,6 @@ import math
 import os
 import numpy as np
 
-np.random.seed(10)
-random.seed(10)
-
 absolute_path = os.path.abspath(__file__)
 directory_name = os.path.dirname(absolute_path)
 os.chdir(directory_name)
@@ -27,7 +24,7 @@ B_FOOD_REQ = 1
 
 STOP_ON_EXTINCTION = True
 
-MUTATIONS = False
+MUTATIONS = True
 MUTATION_CHANCE = 0.01
 
 current_a_count = 0
