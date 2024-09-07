@@ -134,7 +134,10 @@ int main() {
     int current_a_count = pop_a_start;
     int current_b_count = pop_b_start;
     vector<double> frequency;
-    frequency.push_back(pop_a_proportion);
+    if (EXPORT_DATA){
+        frequency.push_back(pop_a_proportion);
+    }
+    
 
     Creature creature_a = Creature(A_ID, A_ON_B_PERF, A_ON_A_PERF, A_ON_NONE_PERF, A_FOOD_REQ);
     Creature creature_b = Creature(B_ID, B_ON_A_PERF, B_ON_B_PERF, B_ON_NONE_PERF, B_FOOD_REQ);
@@ -216,15 +219,21 @@ int main() {
         for (int i = 0; i < current_b_count; i++) {
             current_generation[i + current_a_count] = creature_b;
         }
-        frequency.push_back((double)current_a_count / ((double)current_a_count + (double)current_b_count));
+        if (EXPORT_DATA) {
+            frequency.push_back((double)current_a_count / ((double)current_a_count + (double)current_b_count));
+        }
+        
 
         generation++;
         std::cout << "Gen " << generation << ": A = " << current_a_count << ", B = " << current_b_count << "\n";
     }
-    ofstream file;
-    file.open(OUTPUT_FILE);
-    for (int i = 0; i < generation; i++){
-        file << frequency[i] << "\n";
+    if (EXPORT_DATA) {
+        ofstream file;
+        file.open(OUTPUT_FILE);
+        for (int i = 0; i < generation; i++){
+            file << frequency[i] << "\n";
+        }
     }
+    
     return 0;
 }
