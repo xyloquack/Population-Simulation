@@ -108,10 +108,9 @@ class FoodSource {
 };
 
 int main() {
-    static std::random_device rd;
-    mt19937 mt(rd());
+    mt19937 mt(time(0));
     std::mt19937 rng(std::random_device{}());
-    srand(static_cast <unsigned> (rd()));
+    srand(static_cast <unsigned> (time(0)));
 
     int num_creatures;
     float pop_a_proportion;
@@ -142,6 +141,7 @@ int main() {
     int max_generation_size = max_children * num_food_sources * 2;
     
     vector<Creature> current_generation(max_generation_size);
+    vector<int> creature_indices(max_generation_size);
 
     for (int i = 0; i < current_a_count; i++) {
         current_generation[i] = creature_a;
@@ -174,7 +174,6 @@ int main() {
         current_a_count = 0;
         current_b_count = 0;
 
-        std::vector<int> creature_indices;
         creature_indices.clear();
         for (int i = 0; i < total_creature_count; ++i) {
             creature_indices.push_back(i);
