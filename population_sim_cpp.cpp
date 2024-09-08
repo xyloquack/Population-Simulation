@@ -5,28 +5,18 @@
 #include <algorithm>
 #include <random>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
+using json = nlohmann::json;
 
-const bool EXPORT_DATA = true;
-const char* OUTPUT_FILE = "data.txt";
-
-const int A_ID = 1;
-const double A_ON_B_PERF = 0.5;
-const double A_ON_A_PERF = 1.75;
-const double A_ON_NONE_PERF = 2;
-const double A_FOOD_REQ = 1;
-
-const int B_ID = 2;
-const double B_ON_A_PERF = 1.5;
-const double B_ON_B_PERF = 0.75;
-const double B_ON_NONE_PERF = 2;
-const double B_FOOD_REQ = 1;
-
-const bool STOP_ON_EXTINCTION = true;
-
-const bool MUTATIONS = false;
-const double MUTATION_CHANCE = 0.01;
+bool EXPORT_DATA;
+const char* OUTPUT_FILE;
+int A_ID, B_ID;
+double A_ON_B_PERF, A_ON_A_PERF, A_ON_NONE_PERF, A_FOOD_REQ;
+double B_ON_A_PERF, B_ON_B_PERF, B_ON_NONE_PERF, B_FOOD_REQ;
+bool STOP_ON_EXTINCTION, MUTATIONS;
+double MUTATION_CHANCE;
 
 class Creature {
 public:
@@ -108,7 +98,35 @@ class FoodSource {
         
 };
 
+void load_config() {
+    std::ifstream config_file("config.json");
+    json config;
+    config_file >> config;
+
+    EXPORT_DATA = config["EXPORT_DATA"];
+    OUTPUT_FILE = config["OUTPUT_FILE"].get<std::string>().c_str();
+    
+    A_ID = config["A_ID"];
+    A_ON_B_PERF = config["A_ON_B_PERF"];
+    A_ON_A_PERF = config["A_ON_A_PERF"];
+    A_ON_NONE_PERF = config["A_ON_NONE_PERF"];
+    A_FOOD_REQ = config["A_FOOD_REQ"];
+
+    B_ID = config["B_ID"];
+    B_ON_A_PERF = config["B_ON_A_PERF"];
+    B_ON_B_PERF = config["B_ON_B_PERF"];
+    B_ON_NONE_PERF = config["B_ON_NONE_PERF"];
+    B_FOOD_REQ = config["B_FOOD_REQ"];
+
+    STOP_ON_EXTINCTION = config["STOP_ON_EXTINCTION"];
+
+    MUTATIONS = config["MUTATIONS"];
+    MUTATION_CHANCE = config["MUTATION_CHANCE"];
+}
+
 int main() {
+    load_config();
+
     mt19937 mt(time(0));
     std::mt19937 rng(std::random_device{}());
     srand(static_cast <unsigned> (time(0)));
