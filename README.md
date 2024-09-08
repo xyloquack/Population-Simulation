@@ -1,3 +1,6 @@
+NOTE: For use of the C++ version of the program, you need to install the header file from here from either a package manager or directly in order to compile it: https://github.com/nlohmann/json
+      If you do choose to download it correctly, simply place the json.hpp file into the same directly and change " #include <nlohmann/json.hpp> " to " #include "json.hpp" "
+
 After watching a lot of Primer videos over the years, I decided to try and do what they did in their simulations.
 
 After mapping out the way that I thought that it would work in my head it did not seem particularly hard, especially after jotting down notes of how I would accomplish the task in my notes when my laptop was dead.
