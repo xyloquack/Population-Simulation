@@ -113,10 +113,34 @@ def main():
     # Prompts for the user to answer about how they want the initial starting conditions to be. These could
     # be changed into constants at the top, but I prefer this approach since it is probably something that 
     # will be changed often and this requires less code editing between tests.
-    total_number_of_creatures = int(input("How many creatures should we start with? "))
-    pop_a_proportion = float(input("What proportion do you want to be Creature A (in a decimal ratio)? "))
-    number_of_food_sources = int(input("How many food sources do you want? "))
-    num_generations = int(input("How many generations do you want? "))
+    while True:
+        total_number_of_creatures = input("How many creatures should we start with? ")
+        try:
+            total_number_of_creatures = int(total_number_of_creatures)
+            break
+        except:
+            print("Not a valid input. Try again: ")
+    while True:
+        pop_a_proportion = input("What proportion do you want to be Creature A (in a decimal ratio)? ")
+        try:
+            pop_a_proportion = float(pop_a_proportion)
+            break
+        except:
+            print("Not a valid input. Try again: ")
+    while True:
+        number_of_food_sources = input("How many food sources do you want? ")
+        try:
+            number_of_food_sources = int(number_of_food_sources)
+            break
+        except:
+            print("Not a valid input. Try again: ")
+    while True:
+        num_generations = input("How many generations do you want? ")
+        try:
+            num_generations = int(num_generations)
+            break
+        except:
+            print("Not a valid input. Try again: ")
 
     # The initial relative frequency is just the initial condition set by the user, nothing special
     frequency_over_time.append(pop_a_proportion)
