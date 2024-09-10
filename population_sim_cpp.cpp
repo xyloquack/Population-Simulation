@@ -138,13 +138,29 @@ int main() {
     int generation = 0;
 
     std::cout << "How many creatures should we start with? ";
-    cin >> num_creatures;
-    std::cout << "\nWhat proportion do you want to be Creature A (in a decimal ratio)? ";
-    cin >> pop_a_proportion;
-    std::cout << "\nHow many food sources do you want? ";
-    cin >> num_food_sources;
-    std::cout << "\nHow many generations do you want? ";
-    cin >> num_generations;
+    while(!(cin >> num_creatures)){
+        cout << "Not a valid input. Try again: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    std::cout << "What proportion do you want to be Creature A (in a decimal ratio)? ";
+    while(!(cin >> pop_a_proportion)){
+        cout << "Not a valid input. Try again: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    std::cout << "How many food sources do you want? ";
+    while(!(cin >> num_food_sources)){
+        cout << "Not a valid input. Try again: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    std::cout << "How many generations do you want? ";
+    while(!(cin >> num_generations)){
+        cout << "Not a valid input. Try again: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     int pop_a_start = ceil(num_creatures * pop_a_proportion);
     int pop_b_start = num_creatures - pop_a_start;
